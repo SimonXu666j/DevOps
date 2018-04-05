@@ -1,0 +1,44 @@
+                   传统虚拟化                    容器虚拟化
+创建速度              很慢                         非常快
+
+
+性能影响            通过对于硬件层的模拟，         共享Kernel，几乎没有
+				   增加了系统调用链路的环节       性能损耗
+				   ，有性能损耗
+
+资源消耗               很大                      很小，一台机器可以轻
+												松创建多个Container
+
+
+操作系统覆盖        支持Linux,Windows,           仅仅Kernel所支持的OS
+                   Mac等
+
+
+
+1.Linux Container  -->LXC
+"LXC"是指linux内核（尤指namespace以及Cgroup）的一个特性，它允许其他一些沙盒进程运行在一块相对独立的空间，并且能够方便的控制他们的资源调度
+每个容器都有自己的命名空间
+2.Linux内核基于namespace的隔离机制和Cgroup的资源分配机制，chroot文件系统隔离机制来管理容器
+3.Linux内核提供的限制，记录和隔离进程所使用的资源，由Google的工程师提出后，后来被整合到Kernel
+4.通过不同的子系统（blkio,cpu,cpuacct等）来实现对不同资源使用的控制盒记录
+5.
+pid  容器有自己独立的进程表盒1号进程
+net  容器有自己独立的network info
+ipc  在ipc通信时候，需要加入额外信息来表示进程
+mnt  每个容器有自己唯一的目录挂载
+utc  每个容器有独立的hostname和domain
+
+
+传统虚拟化和容器虚拟化的区别：有两张图
+
+
+6.docker是做分布式的，go语言天生是分布式的，不依赖任何库、任何包、任何平台，部署非常容易
+
+7.docker是多层次的联合文件系统
+  可以实现把多个不同目录的内容合并在一起
+  允许read-only和read-write目录并存
+
+8.docker使用aufs来实现分层的文件系统的管理
+  只读部分定义为Image，可写部分是container
+  Image类似一个单链表系统，每个Image包含一个指向parent image的指针
+  没有parent image的image是base image
