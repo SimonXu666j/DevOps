@@ -1,0 +1,32 @@
+virtualbox+vagrant    --创建Linux虚拟机
+mkdir centos7
+vagrant init centos/7  --初始化生成vagrantfile
+vagrant up   --下载对应image，创建虚拟机
+vagrant ssh  --进入虚拟机
+
+docker官方文档网址：https://docs.docker.com/
+centos的docker安装方式
+https://docs.docker.com/install/linux/docker-ce/centos/#install-docker-ce-1：
+1.$ sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-selinux \
+                  docker-engine-selinux \
+                  docker-engine
+2.$ sudo yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+3.$ sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+4.$ sudo yum install docker-ce
+5.$ sudo systemctl start docker
+
+
+安装指定版本的方式
+1.$ yum list docker-ce --showduplicates | sort -r       --查看有哪些版本
+2.$ sudo yum install docker-ce-<VERSION STRING>         --安装指定版本的
