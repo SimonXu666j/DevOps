@@ -30,3 +30,21 @@ https://docs.docker.com/install/linux/docker-ce/centos/#install-docker-ce-1：
 安装指定版本的方式
 1.$ yum list docker-ce --showduplicates | sort -r       --查看有哪些版本
 2.$ sudo yum install docker-ce-<VERSION STRING>         --安装指定版本的
+
+
+docker machine工具,使用virtualbox作为driver，docker-machine也可以在远程云上创建虚拟机
+docker-machine create demo     -- 创建一个自带docker的Linux虚机
+docker-machine ssh demo    --进入虚机
+docker-machine ls      --查看docker-machine创建的虚机状态
+
+本地docker服务停掉，使用docker-machine创建的虚机的docker服务：
+docker-machine env demo
+eval $(docker-machine env demo)
+
+不再使用docker-machine创建的虚机的docker环境，切换成本地
+docker-machine env --unset
+eval $(docker-machine env --unset)
+
+
+docker playground
+http://play-with-docker.com/
