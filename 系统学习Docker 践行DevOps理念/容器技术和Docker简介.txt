@@ -105,3 +105,24 @@ COPY docker-entrypoint.sh /usr/local/bin
 ENTRYPOINT ["docker-entrypoint.sh"]
 EXPOSE 27017
 CMD ["mongod"]
+
+
+镜像的发布
+先登录docker hub 
+docker login
+然后推送到仓库
+docker push 
+
+搭建私有docker仓库
+docker run -d -p 5000:5000 --restart always --name registry registry:2
+另外的机器创建镜像
+docker build -t ip:port/hello-world .
+推送镜像至私有仓库（在这步之前，在/etc/docker目录下创建daemon.json，加入page{ "insecure-registries":["ip:port"] }，然后编辑/lib/systemd/system/docker.service，加一行EnvironmentFile=-/etc/docker/daemon.json，然后重启docker服务）
+docker push ip:port/hello-world   
+通过docker registry的API查看镜像是否推送至私有仓库，有哪些镜像
+ip:port/v2/_catalog
+
+
+docker run -d --name=demo           --name可以指定容器唯一的NAME值
+docker inspect container_id        --查看容器的详细信息
+docker logs container_id           --查看容器运行产生的输出
