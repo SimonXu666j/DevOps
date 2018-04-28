@@ -1,0 +1,24 @@
+Docker Network
+单机：Bridge Network
+      Host Network
+	  None Network
+多机：Overlay Network
+
+基础网络概念
+1.基于数据包的通信方式
+网络分层
+    ISO/OSI  7层模型
+	TCP/IP   5层模型
+路由的概念
+IP地址和路由
+公有IP（互联网上的唯一标识，可以访问internet）和私有IP（不可以在互联网上使用，仅供机构内部使用）
+    私有IP地址范围（作内网IP）:
+		A类10.0.0.0-10.255.255.255
+		B类172.16.0.0-172.31.255.255
+		C类192.168.0.0-192.168.255.255
+网络地址转换NAT:
+    私有地址(ip port)翻译成公有地址(ip port)，然后去访问internet，internet返回的时候去查NAT的表，然后再返回给对应的私有地址
+ping（基于ICMP协议，验证IP的可达性） 和 telnet（验证服务的可用性）
+
+网络抓包工具：
+   wireshark
