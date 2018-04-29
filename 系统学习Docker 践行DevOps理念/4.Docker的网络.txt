@@ -22,3 +22,44 @@ ping（基于ICMP协议，验证IP的可达性） 和 telnet（验证服务的�
 
 网络抓包工具：
    wireshark
+
+
+Linux Network Namespace
+sudo ip netns add test1      --创建Network Namespace
+sudo ip netns list           --查看Network Namespace
+sudo ip netns delete test1   --删除Network Namespace
+
+ip link     --查看ip link
+ip a     --查看ip地址
+sudo ip netns exec test1 ip link set dev lo up  --使lo端口up起来，要up的话需要link的两端连接起来
+
+使两个Network Namespace连起来的方式：
+sudo ip link add veth-test1 type veth peer name veth-test2   --添加一对link
+sudo ip link set veth-test1 netns test1   --将veth-test1接口添加到test1
+sudo ip link set veth-test2 netns test2   --将veth-test2接口添加到test2
+sudo ip netns exec test1 ip link  --查看连接情况
+sudo ip netns exec test2 ip link  --查看连接情况
+sudo ip netns exec test1 ip addr add 192.168.1.1/24 dev veth-test1    --分配ip地址
+sudo ip netns exec test2 ip addr add 192.168.1.2/24 dev veth-test2    --分配ip地址
+sudo ip netns exec test1 ip link set dev veth-test1 up     --使veth-test1端口up
+sudo ip netns exec test2 ip link set dev veth-test2 up     --使veth-test2端口up
+namespace互ping ip地址：
+sudo ip netns exec test1 ping 192.168.1.2   
+sudo ip netns exec test2 ping 192.168.1.1  
+
+
+Docker Bridge
+1.容器直接互相访问
+2.容器访问外网      --Bridge Network截图
+sudo docker network ls   --查看docker网络
+sudo docker network inspect network_id     --docker0是主机里面默认的一个networkspace 
+brctl show    --查看bridge的情况，brctl命令需要 sudo yum install bridge-utils
+
+
+容器之间的link
+sudo docker run -d --name test2 --link test1 busybox /bin/sh -c "while true;do sleep 3600;done"          --test2连接test1，link是单方向的
+ 
+sudo docker network create -d bridge my-bridge   --新建一个network
+sudo docker run -d --name test3 --network my-bridge busybox /bin/sh -c "while true;do sleep 3600;done"      --指定连接哪个bridge
+sudo docker network connect my-bridge test2           --将已有的容器连接到新的bridge上去，原来的bridge上容器也在
+注：容器连接到用户自己创建的bridge上的话，容器之间可以通过name，进行ping通，即这两个容器默认已经是link好的       --用户自定义的bridge与系统默认的bridge（docker0）的区别
