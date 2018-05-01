@@ -1,0 +1,41 @@
+部署一个wordpress，使用mysql数据库
+1.docker run -d --name mysql_db -v mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=12345678 -e MYSQL_DATABASE=wordpress mysql:5.7.22
+2.docker run -d -e WORDPRESS_DB_HOST=mysql_db:3306 --link mysql_db:mysql -p 8080:80 hub.c.163.com/library/wordpress
+注：查看一个容器的启动日志命令 docker logs container_name
+爬过的坑：php连接docker mysql 8.0出错authentication method unknown，验证方式变了，采用新的验证方式Caching SHA-2，所以本案例使用mysql5.7.22版本
+         mysql做了数据持久化之后，要想重新安装WordPress，需要将mysql的数据清空，不然重新安装的WordPress的默认安装选项会跟第一次一样，因为已经数据持久化到mysql的数据卷中
+
+
+Compose是什么？
+多容器的APP太恶心：
+要从Dockerfile build image 或者Dockerhub拉取image
+要创建多个container
+要管理这些container（启动停止删除）
+
+Docker Compose “批处理”：
+1.Docker Compose 是一个工具
+2.这个工具可以通过一个yml文件定义多容器的docker应用 
+3.通过一条命令就可以根据yml文件的定义去创建或者管理这多个容器
+
+docker-compose.yml
+三大概念：Services Networks Volumes
+
+Services:
+1.一个service代表一个container，这个container可以从dockerhub的image来创建，或者从本地的Dockerfile build出来的image来创建
+2.Service的启动类似docker run，我们可以给其指定network和volume，所以可以给service指定network和Volume的引用 
+
+docker compose的安装和基本使用
+Linux下安装：
+1.sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+2.sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose up      --启动yml文件中的容器
+docker-compose ps      --查看启动的service
+docker-compose stop    --停服务
+docker-compose down    --删容器 
+docker-compose images  --查看镜像 
+
+水平扩展（scale）和负载均衡（haproxy）
+docker-compose up --sacle web=5 -d      --扩展到5个实例
+
+注：docker-compose只适合开发在本地调试，生产环境需要使用别的方式进行集群搭建
