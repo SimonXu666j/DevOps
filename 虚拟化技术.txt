@@ -42,3 +42,8 @@ utc  每个容器有独立的hostname和domain
   只读部分定义为Image，可写部分是container
   Image类似一个单链表系统，每个Image包含一个指向parent image的指针
   没有parent image的image是base image
+
+9.Docker最佳建议：一个Container只干一件事情
+
+10.分布式集群，用来进行服务发现和选举的工具：Consul和ZooKeeper
+   Consul提供API进行服务分类，服务的监控
