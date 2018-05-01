@@ -63,3 +63,23 @@ sudo docker network create -d bridge my-bridge   --新建一个network
 sudo docker run -d --name test3 --network my-bridge busybox /bin/sh -c "while true;do sleep 3600;done"      --指定连接哪个bridge
 sudo docker network connect my-bridge test2           --将已有的容器连接到新的bridge上去，原来的bridge上容器也在
 注：容器连接到用户自己创建的bridge上的话，容器之间可以通过name，进行ping通，即这两个容器默认已经是link好的       --用户自定义的bridge与系统默认的bridge（docker0）的区别
+
+
+
+容器的端口映射
+容器端口映射到宿主机端口   -p参数
+docker run -p hostPort:containerPort
+
+容器网络之host和none：
+host这种模式是跟宿主机共享一个network namespace
+none这种模式是孤立的，外部访问不了
+
+多容器复杂应用的部署
+1.起一个redist的容器，不做端口映射
+2.然后起一个flask-redis的容器连接到redis容器，这样flask-redis容器通过--link加名字去访问redis，而不需要指定ip，并且在flask-redis的容器里面通过-e参数指定环境变量REDIS_HOST=redis，然后通过-p 5000:5000做一个端口映射
+注：-e参数可以传递程序的配置
+
+多机器通信
+原理：VXLAN     --underlay 和 overlay
+创建overlay网络 sudo docker network create -d overlay demo
+注：通过创建overlay网络加不同机器上的容器连接到同一个网络
