@@ -1,0 +1,25 @@
+Container layer    --R/W
+Image layers       --R/O
+
+Data Volume
+
+Docker持久化数据的方案
+1.基于本地文件系统的Volume。可以在执行Docker create或Docker run时，通过-v参数将主机的目录作为容器的数据卷。这部分功能便是基于本地文件系统的volume管理。
+2.基于plugin的Volume，支持第三方的存储方案，比如NAS，aws 
+
+Volume的类型
+受管理的data Volume，由docker后台自动创建
+绑定挂载的Volume，具体挂载位置可以由用户指定
+
+数据持久化：Data Volume
+docker volume ls       --查看数据卷
+docker volume rm VOLUME NAME     --删除对应的数据卷
+docker volume inspect VOLUME NAME    --产看数据卷详细信息
+
+dockerfile中： VOLUME ["/var/lib/mysql"]
+容器启动命令加参数-v指定数据卷挂载的名字：docker run -v mysql:/var/lib/mysql
+
+
+数据持久化：Bind Mouting
+docker run -v /home/aaa:/root/aaa        --容器目录和宿主机目录的映射，两个目录同步
+注：利用docker作为本地开发环境是做devops的第一步
