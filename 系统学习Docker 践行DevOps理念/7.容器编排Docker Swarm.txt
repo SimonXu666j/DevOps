@@ -1,0 +1,34 @@
+容器编排：Swarm mode
+
+创建一个三节点的swarm集群：一个manager 两个worker
+1.在manager节点初始化manager：docker swarm init --advertise-add=ip
+2.在worker节点机器创建worker：dockerswarm join --token xxx ip:port
+3.在manager查看cluster节点信息：docker node ls
+
+Service的创建维护和水平扩展
+docker service create --name demo busybox command    --创建service
+注：在swarm模式下基本不使用docker run
+docker service ls    --查看创建的service
+docker service ps demo    --查看service详细情况
+docker service scale demo=5       --创建5个demo实例
+docker service rm demo        --删除service
+
+
+在swarm集群里通过service部署WordPress
+1.docker network create -d overlay demo    --创建一个overlay的网络
+2.docker network ls      --查看网络
+3.docker service create --name mysql_db --env MYSQL_ROOT_PASSWORD=root 
+--env MYSQL_DATABASE=wordpress --network demo --mount type=volume,source=mysql-data,destination=/var/lib/mysql mysql                     --创建mysql的service
+4.docker service --name wordpress -p 80:80 -env WORDPRESS_DB_PASSWORD=root --env WORDPRESS_DB_HOST=mysql wordpress                       --创建wordpress的service
+注：swarm的底层机制会同步网络的创建，为了实现容器之间的通信
+
+集群服务间通信之RoutingMesh
+VIP    --虚拟ip
+nslookup service_name  --查看dns对应的vip
+nslookup tasks.service_name   --查看真实ip
+
+Routing Mesh的两种体现
+Internal  -- Container和Container之间的访问通过overlay网络（通过VIP虚拟IP）
+Ingress   --如果服务有绑定端口，则此服务可以通过任意swarm节点的相应接口访问
+
+
