@@ -38,5 +38,27 @@ docker stack ps wordpress     --查看容器情况
 docker stack rm wordpress     --删除service
 
 
+DockerSecret管理和使用
+1.存在Swarm Manager节点 Raft database里
+2.Secret可以assign给一个service，这个service就能看到这个secret
+3.在container内部Secret看起来像文件，但是实际是在内存中
 
+secret的创建可以通过从文件中读取，也可以从标准输入读取。
+1.docker secret create my-passwd passwd_file   --从文件中读取创建secret
+  rm passwd_file      --删除文件
+  docker secret ls    --查看secret文件
+2.echo "admin123"|docker secret create my-passwd2 -     --从标准输入读取
 
+service如何使用secret？
+1.创建service的时候将secret暴露给service    --secret my-passwd
+2.在容器的/run/secrets目录下能找到secret
+
+DcockerSecret在Stack中的使用
+在docker-compose.yml文件中配置
+
+Service更新
+docker service update --image 新版本的镜像       --更新service的镜像
+--publish-rm 8080:5000 --publish-add 8088:5000   --更新service的端口
+注：scale起两个的话，更新的时候会一个一个的更新，做到业务不中断
+
+如果是docker stack需要跟新service的话，需要去更新docker-compose.yml文件，然后重新docker stack deploy 
