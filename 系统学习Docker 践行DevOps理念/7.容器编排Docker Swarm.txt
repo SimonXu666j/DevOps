@@ -31,4 +31,12 @@ Routing Mesh的两种体现
 Internal  -- Container和Container之间的访问通过overlay网络（通过VIP虚拟IP）
 Ingress   --如果服务有绑定端口，则此服务可以通过任意swarm节点的相应接口访问
 
+DockerStack部署wordpress
+docker stack deploy wordpress --compose-file=dockcer-compose.yml     --创建wordpress的服务
+docker stack services wordpress      --查看service状态
+docker stack ps wordpress     --查看容器情况
+docker stack rm wordpress     --删除service
+
+
+
 
