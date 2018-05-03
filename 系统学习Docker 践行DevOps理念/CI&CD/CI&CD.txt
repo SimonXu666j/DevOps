@@ -1,0 +1,42 @@
+版本管理：gitlab
+持续集成：gitlab CI    -->天然的分布式，可以在任何地方安装CI的runner，跟gitlab的集成很好，Pipeline的概念
+搭建私有的docker registry
+持续部署：采用自己的脚步
+
+
+centos7搭建gitlab服务器：
+1.准备工作：
+内存4G
+2.安装依赖软件
+sudo yum install -y git vim gcc glibc-static telnet
+sudo yum install -y curl policycoreutils-python openssh-server
+sudo yum systemctl enable sshd
+sudo systemctl start sshd
+
+sudo yum install postfix
+sudo systemctl enable postfix
+sudo systemctl start postfix
+3.设置gitlab安装源
+使用清华大学的源，新建/etc/yum.repos.d/gitlab-ce.repo，内容为
+[gitlab-ce]
+name=Gitlab CE Repository
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el$releasever/
+gpgcheck=0
+enabled=1
+
+国外源：
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
+
+4.安装Gitlab
+1.安装的时候设置域名：
+sudo EXTERNAL_URL="http://git.test.com" yum install -y gitlab-ce  --本机访问需要配置host
+2.安装完成之后，进行配置生效
+sudo gitlab-ctl reconfigure
+
+5.登陆和修改root用户密码
+
+
+注：
+1.gitlab的使用，首先创建一个group，然后在group在创建project，然后新建文件，比如ADD README.md
+2.Admin area对整个gitlab服务做一些管理
+3.gitlab核心配置文件：gitlab.rb，改完配置需要执行gitlab-ctl reconfigure
