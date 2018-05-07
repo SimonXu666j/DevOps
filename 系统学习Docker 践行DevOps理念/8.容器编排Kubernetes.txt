@@ -1,0 +1,7 @@
+Kubernetes Master
+
+Kubernetes Node:
+Pod:具有相同namespace的container的组合
+
+minikube+kubectl+virtualbox   创建单节点的kubernetes集群
+kubectl cluster-info    查看kubernetes集群情况
